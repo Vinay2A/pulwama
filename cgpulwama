@@ -1,0 +1,1114 @@
+#include<GL/glut.h>
+#include<math.h>
+#include<wingdi.h>
+#define ESCAPE 27
+int then = 0, flagattack = 0, flagsold = 0, flagbus = 0, flagb = 0, Indianflag = 0;
+int k, x = -150, y = 0, window;
+GLfloat xangle = 0.0, yangle = 0.0, zangle = 0.0;
+GLfloat verticesd[][3] = { {-440,-185,-70},{-175,-185,-70},
+					{-175,-65,-70}, {-440, -55,-70},
+
+					{-465,-205,70}, {-200,-205,70},
+					{-200,-85,70}, {-465,-75,70},
+
+					{-465,-128,70},{-200,-128,70},
+					{-175,-108,-70},{-190,-55,-70},
+
+					{-215,-75,70}, {-440,-108,-70},
+					{-280,-108,-70},{-280,-55,-70},
+
+{-220,-55,-70},{-220,-185,-70},{-280,-185,-70} };
+
+GLfloat colorsd[][3] = { {1.0,1.0,0.0},{0.0,0.6,0.7},{.3,.4,.5} };
+
+float colR = 3.0;
+float colG = 1.5;
+float colB = 1.0;
+
+
+static int flag = 1;
+
+void drawBall(void) {//sun on window 2
+
+	glColor3f(colR, colG, colB); //set ball colour
+	glTranslatef(-480, 200, 0); //moving it toward the screen a bit on creation
+	glutSolidSphere(30, 30, 30); //create ball.
+
+}
+
+void man()
+{//3 soldiers who will join the bus in window1
+	for (k = 60; k < 110; k += 100) {
+		glColor3ub(0, 0, 0);
+		glPushMatrix();
+		glTranslatef(-320 + k, 71, 0);
+		glutSolidTorus(1, 10, 100, 90);
+		glPopMatrix();
+		glColor3ub(255, 191, 128);
+		glPushMatrix();
+		glTranslatef(-320 + k, 71, 0);
+		glutSolidTorus(7, 7, 100, 90);
+		glPopMatrix();
+		glColor3ub(0, 0, 0);
+		glBegin(GL_LINES);
+		glVertex3i(-320 + k, 71, 50);
+		glVertex3i(-320 + k, 66, 50); //nose
+		glVertex3i(-311 + k, 76, 50);
+		glVertex3i(-317 + k, 76, 50);//eyebrow
+		glVertex3i(-323 + k, 76, 50);
+		glVertex3i(-329 + k, 76, 50);//eyebrow
+		glEnd();
+		//ear right
+		glBegin(GL_POLYGON);
+		glColor3ub(255, 191, 128);
+		glVertex2i(-306 + k, 71);
+		glVertex2i(-306 + k, 67);
+		glVertex2i(-304 + k, 66);
+		glVertex2i(-304 + k, 72);
+		glEnd();
+		//ear left
+		glBegin(GL_POLYGON);
+		glColor3ub(255, 191, 128);
+		glVertex2i(-334 + k, 71);
+		glVertex2i(-336 + k, 72);
+		glVertex2i(-336 + k, 67);
+		glVertex2i(-334 + k, 66);
+		glEnd();
+		//hair
+		glBegin(GL_POLYGON);
+		glColor3ub(0, 0, 0);
+		glVertex3i(-307 + k, 79, 50);
+		glVertex3i(-333 + k, 79, 50);
+		glVertex3i(-327 + k, 85, 50);
+		glVertex3i(-313 + k, 85, 50);
+		glEnd();
+
+
+		// eyes
+		glBegin(GL_POLYGON);
+		glVertex3i(-313 + k, 74, 50);
+		glVertex3i(-315 + k, 74, 50);
+		glVertex3i(-315 + k, 72, 50);
+		glVertex3i(-313 + k, 72, 50);
+		glEnd();
+		glBegin(GL_POLYGON);
+		glVertex3i(-325 + k, 74, 50);
+		glVertex3i(-327 + k, 74, 50);
+		glVertex3i(-327 + k, 72, 50);
+		glVertex3i(-325 + k, 72, 50);
+		glEnd();
+		// mouth
+		glColor3f(.37, .69, .77);
+		glBegin(GL_POLYGON);
+		glVertex3i(-315 + k, 63,50);
+		glVertex3i(-320 + k, 61,50);
+		glVertex3i(-325 + k, 63,50);
+		glVertex3i(-320 + k, 63,50);
+		glEnd();
+		//beard
+		glBegin(GL_POLYGON);
+		glColor3ub(0, 0, 0);
+		glVertex3i(-318 + k, 54,50);
+		glVertex3i(-320 + k, 54,50);
+		glVertex3i(-322 + k, 60,50);
+		glVertex3i(-318 + k, 60,50);
+		glEnd();
+		//shirt
+		glBegin(GL_POLYGON);
+		glColor3ub(55, 50, 70);
+		glVertex2i(-309 + k, 56);
+		glVertex2i(-331 + k, 56);
+		glVertex2i(-346 + k, 45);
+		glVertex2i(-341 + k, 37);
+		glVertex2i(-336 + k, 41);
+		glVertex2i(-336 + k, 21);
+		glVertex2i(-304 + k, 21);
+		glVertex2i(-304 + k, 41);
+		glVertex2i(-299 + k, 36);
+		glVertex2i(-294 + k, 45);
+		glEnd();
+		//hands
+		glBegin(GL_POLYGON);
+		glColor3ub(255, 191, 128);
+		glVertex2i(-345 + k, 44);
+		glVertex2i(-355 + k, 29);
+		glVertex2i(-347 + k, 30);
+		glVertex2i(-342 + k, 38);
+		glEnd();
+		glBegin(GL_POLYGON);
+		glVertex2i(-355 + k, 29);
+		glVertex2i(-336 + k, 14);
+		glVertex2i(-336 + k, 21);
+		glVertex2i(-347 + k, 30);
+		glEnd();
+		glBegin(GL_POLYGON);
+		glVertex2i(-295 + k, 44);
+		glVertex2i(-285 + k, 29);
+		glVertex2i(-293 + k, 30);
+		glVertex2i(-298 + k, 38);
+		glEnd();
+		glBegin(GL_POLYGON);
+		glVertex2i(-285 + k, 29);
+		glVertex2i(-304 + k, 14);
+		glVertex2i(-304 + k, 21);
+		glVertex2i(-293 + k, 30);
+		glEnd();
+		// belt
+		glBegin(GL_POLYGON);
+		glColor3ub(150, 12, 30);
+		glVertex2i(-336 + k, 21);
+		glVertex2i(-304 + k, 21);
+		glVertex2i(-304 + k, 16);
+		glVertex2i(-304 + k, 16);
+		glVertex2i(-336 + k, 16);
+		glEnd();
+		// collar
+		glBegin(GL_POLYGON);
+		glColor3ub(200, 140, 186);
+		glVertex2i(-309 + k, 56);
+		glVertex2i(-331 + k, 56);
+		glVertex2i(-326 + k, 46);
+		glVertex2i(-314 + k, 46);
+		glEnd();
+
+		glBegin(GL_TRIANGLES);
+		glColor3ub(20, 140, 110);
+		glVertex2i(-320 + k, 53);
+		glVertex2i(-325 + k, 46);
+		glVertex2i(-315 + k, 46);
+		glEnd();
+
+		// buttons
+		glColor3ub(0, 0, 0);
+		glPushMatrix();
+		glTranslatef(-320 + k, 41, 0);
+		glutSolidTorus(1, 1, 100, 90);
+		glPopMatrix();
+		glPushMatrix();
+		glTranslatef(-320 + k, 34, 0);
+		glutSolidTorus(1, 1, 100, 90);
+		glPopMatrix();
+		glPushMatrix();
+		glTranslatef(-320 + k, 27, 0);
+		glutSolidTorus(1, 1, 100, 90);
+		glPopMatrix();
+
+		/// pant
+		glBegin(GL_POLYGON);
+		glColor3ub(80, 80, 230);
+		glVertex2i(-335 + k, 13);
+		glVertex2i(-305 + k, 13);
+		glVertex2i(-300 + k, -19);
+		glVertex2i(-310 + k, -19);
+		glVertex2i(-313 + k, 14);
+		glVertex2i(-330 + k, -19);
+		glVertex2i(-340 + k, -19);
+		glEnd();
+		//shoe left
+		glBegin(GL_POLYGON);
+		glColor3ub(100, 10, 10);
+		glVertex2i(-310 + k, -19);
+		glVertex2i(-310 + k, -28);
+		glVertex2i(-292 + k, -28);
+		glVertex2i(-300 + k, -19);
+
+		glEnd();
+		//shoe right
+		glBegin(GL_POLYGON);
+		glColor3ub(100, 10, 10);
+		glVertex2i(-330 + k, -19);
+		glVertex2i(-330 + k, -28);
+		glVertex2i(-348 + k, -28);
+		glVertex2i(-340 + k, -19);
+		glEnd();
+	}
+}
+
+void shrubd()
+{//shurbs which are below the road
+	for (k = 0; k < 1000; k += 200) {
+		//leaves1
+		glColor3ub(0, 160, 0);
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslatef(-400 + k, -380, 70);
+		glutSolidSphere(20, 20, 20);
+		glPopMatrix();
+		//leaves2
+		glColor3ub(0, 160, 0);
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslatef(-385 + k, -365, 70);
+		glutSolidSphere(20, 20, 20);
+		glPopMatrix();
+		//leaves3
+		glColor3ub(0, 160, 0);
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslatef(-370 + k, -380, 70);
+		glutSolidSphere(20, 20, 20);
+		glPopMatrix();
+
+		//flower1
+
+		glColor3ub(140, 0, 0);
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslatef(-370 + k, -380, 100);
+		glutSolidSphere(5, 20, 20);
+		glPopMatrix();
+
+
+		//flower2
+		glColor3ub(140, 0, 0);
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslatef(-388 + k, -367, 100);
+		glutSolidSphere(5, 20, 20);
+		glPopMatrix();
+	}
+}
+
+void tree1()
+{
+	for (k = -300; k < 400; k += 300) {
+		//trunk1
+		glColor3ub(95, 6, 5);
+		double len = 100;
+		double thick = 20;
+		glPushMatrix();
+		glTranslated(k, 0, -100.0);
+		glScaled(thick, len, thick);
+		glutSolidCube(1.0);
+		glPopMatrix();
+
+		//leaves1
+
+
+		glColor3f(0.0, 0.2, 0.0);
+		glPushMatrix();
+		glLoadIdentity();
+
+		glTranslated(k, 30, -100.0);
+		glutSolidCone(70, 140, 3, 2);
+		glPopMatrix();
+
+		//leaves2
+
+		glColor3f(0.0, 0.2, 0.0);
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslated(k, 60, -100.0);
+		glutSolidCone(60, 120, 3, 2);
+		glPopMatrix();
+
+		// leaves3
+
+		glColor3f(0.0, 0.2, 0.0);
+		glPushMatrix();
+		glLoadIdentity();
+		glTranslated(k, 90, -100);
+		glutSolidCone(50, 100, 3, 2);
+		glPopMatrix();
+	}
+}
+void tree2()
+{
+	//trunk1
+	glColor3ub(95, 6, 5);
+	double len = 100;
+	double thick = 20;
+	glPushMatrix();
+	glTranslated(-100, 0, -100.0);
+	glScaled(thick, len, thick);
+	glutSolidCube(1.0);
+	glPopMatrix();
+
+	//leaves1
+
+
+	glColor3f(0.0, 0.2, 0.0);
+	glPushMatrix();
+	glLoadIdentity();
+
+	glTranslated(-100, 30, -100.0);
+	glutSolidCone(70, 140, 3, 2);
+	glPopMatrix();
+
+	//leaves2
+
+	glColor3f(0.0, 0.2, 0.0);
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslated(-100, 60, -100.0);
+	glutSolidCone(60, 120, 3, 2);
+	glPopMatrix();
+
+	// leaves3
+
+	glColor3f(0.0, 0.2, 0.0);
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslated(-100, 90, -100);
+	glutSolidCone(50, 100, 3, 2);
+	glPopMatrix();
+}
+
+
+
+void tree3()
+{
+	//trunk1
+	glColor3ub(95, 6, 5);
+	double len = 100;
+	double thick = 20;
+	glPushMatrix();
+	glTranslated(200, 0, -100.0);
+	glScaled(thick, len, thick);
+	glutSolidCube(1.0);
+	glPopMatrix();
+
+	//leaves1
+
+
+	glColor3f(0.0, 0.2, 0.0);
+	glPushMatrix();
+	glLoadIdentity();
+
+	glTranslated(200, 30, -100.0);
+	glutSolidCone(70, 140, 3, 2);
+	glPopMatrix();
+
+	//leaves2
+
+	glColor3f(0.0, 0.2, 0.0);
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslated(200, 60, -100.0);
+	glutSolidCone(60, 120, 3, 2);
+	glPopMatrix();
+
+	// leaves3
+
+	glColor3f(0.0, 0.2, 0.0);
+	glPushMatrix();
+	glLoadIdentity();
+	glTranslated(200, 90, -100);
+	glutSolidCone(50, 100, 3, 2);
+	glPopMatrix();
+}
+void textb() {
+	char busname[] = "CRPF";//text on the bus
+	void *font = GLUT_BITMAP_TIMES_ROMAN_24;
+	int k;
+	glColor3f(1.0, 0.0, 0.0);
+	glRasterPos3f(-380, -170, 100);
+	for (k = 0; k < strlen(busname); k++)
+		glutBitmapCharacter(font, busname[k]);
+}
+
+void wheel1d()//whell1
+{
+	glColor3f(0.1, 0.1, 0.1);
+
+	glPushMatrix();
+	glTranslatef(-255, -198, -70);
+	glutSolidTorus(5, 15, 100, 90);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-410, -198, -70);
+	glutSolidTorus(5, 15, 100, 90);
+	glPopMatrix();
+
+	glColor3ub(100, 100, 100);
+
+	glPushMatrix();
+	glTranslatef(-255, -198, -70);
+	glutSolidTorus(5, 5, 10, 69);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-410, -198, -70);
+	glutSolidTorus(5, 5, 10, 69);
+	glPopMatrix();
+}
+void wheel2d()//wheel2
+{
+	glColor3f(0.1, 0.1, 0.1);
+
+	glPushMatrix();
+	glTranslatef(-420, -205, 70);
+	glutSolidTorus(5, 15, 100, 90);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-265, -205, 70);
+	glutSolidTorus(5, 15, 100, 90);
+	glPopMatrix();
+
+	glColor3ub(100, 100, 100);
+
+	glPushMatrix();
+	glTranslatef(-265, -205, 70);
+	glutSolidTorus(5, 5, 10, 69);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-420, -205, 70);
+	glutSolidTorus(5, 5, 10, 69);
+	glPopMatrix();
+}
+void polygond(int a, int b, int c, int d, int E, int f)
+{
+	glBegin(GL_POLYGON);
+	glColor3fv(colorsd[E]);
+	glVertex3fv(verticesd[a]);
+	glVertex3fv(verticesd[b]);
+	glVertex3fv(verticesd[c]);
+	glVertex3fv(verticesd[d]);
+	if (f != 0)
+		glVertex3fv(verticesd[f]);
+	glEnd();
+}
+void colorcubed()//bus body
+{
+	int i;
+	wheel1d();
+	polygond(0, 1, 5, 4, 0, 0);
+
+
+	polygond(13, 14, 18, 0, 0, 0);
+	polygond(15, 16, 17, 18, 2, 0);
+	polygond(16, 11, 2, 1, 0, 17);
+
+
+	polygond(0, 4, 8, 13, 0, 0);
+	polygond(1, 10, 9, 5, 0, 0);
+	polygond(9, 10, 2, 6, 1, 0);
+	polygond(4, 5, 9, 8, 0, 0);
+	polygond(8, 9, 6, 12, 1, 7);
+	glColor3ub(100, 40, 50);
+	for (i = 0; i <= 180; i += 45)//red lines on bus
+	{
+		glBegin(GL_LINES);
+		glVertex3f(-420 + i, -130, 100);
+		glVertex3f(-420 + i, -75, 100);
+		glEnd();
+	}
+
+
+	polygond(13, 8, 7, 3, 1, 0);
+	polygond(3, 15, 14, 13, 1, 0);
+	polygond(6, 2, 11, 12, 0, 0);
+	polygond(11, 3, 7, 12, 0, 0);
+
+	wheel2d();
+
+}
+void move_sold() {//moving the soldier down
+	if (flagsold == 1 && flagattack == 0) {
+		if (y > -185) {
+			y -= 3;
+			glPushMatrix();
+			glTranslatef(0, y, 0);
+			man();
+			glPopMatrix();
+			flagsold = 0;
+		}
+	}
+
+}
+void move_bus() {//moving the bus forward
+	if (flagbus == 1 || flagsold == 1) {
+		if (x < 900) {
+			x += 3;
+			glPushMatrix();
+			glTranslatef(x, 0, 0);
+			wheel1d();
+			colorcubed();
+			textb();
+			wheel2d();
+			glPopMatrix();
+
+		}
+		else {
+			flagattack = 1;
+			x = -150;
+		}
+		flagbus = 0;
+	}
+}
+int X = 0, Y = 0;
+void manhead(int x) {
+
+	glColor3ub(0, 0, 0);
+	glPushMatrix();
+	glTranslatef(-300 + x, 0 - 200, 90);
+	glutSolidTorus(8, 10, 100, 90);
+	glPopMatrix();
+	glColor3ub(255, 191, 128);
+	glPushMatrix();
+	glTranslatef(-300 + x, 0 - 200, 90);
+	glutSolidTorus(15, 7, 100, 90);
+	glPopMatrix();
+	//eyebrow
+	glBegin(GL_POLYGON);
+	glColor3f(0, 0, 0);
+	glVertex3i(-293 + x, 10 - 200, 140);
+	glVertex3i(-277 + x, 4 - 200, 140);
+	glVertex3i(-283 + x, 4 - 200, 140);
+	glVertex3i(-287 + x, 10 - 200, 140);
+	glEnd();
+	//eye
+	glPointSize(3.0);
+
+	glBegin(GL_POINTS);
+	glVertex3f(-283 + x, -2 - 200, 140);
+	glEnd();
+	//nose
+	glBegin(GL_POLYGON);
+	glColor3ub(255, 191, 128);
+	glVertex3i(-280 + x, 3 - 200, 140);
+	glVertex3i(-280 + x, -4 - 200, 140);
+	glVertex3i(-273 + x, -2 - 200, 140);
+
+	glEnd();
+	//hair
+	glBegin(GL_POLYGON);
+	glColor3f(0, 0, 0);
+	glVertex3i(-325 + x, -18 - 200, 140);
+	glVertex3i(-323 + x, 28 - 200, 140);
+	glVertex3i(-284 + x, 28 - 200, 140);
+	glVertex3i(-284 + x, 19 - 200, 140);
+	glEnd();
+}
+void textc() {
+	char carname[] = "bomb.";//text on the car
+	void *font = GLUT_BITMAP_TIMES_ROMAN_24;
+	int k;
+	glColor3f(1.0, 0.0, 0.0);
+	glRasterPos3f(0, -70 - 200, 100);
+	for (k = 0; k < strlen(carname); k++)
+		glutBitmapCharacter(font, carname[k]);
+}
+void wheel(int x) {
+	glColor3f(0.1, 0.1, 0.1);
+
+	glPushMatrix();
+	glTranslatef(-255 + x, -78 - 200, -70);
+	glutSolidTorus(5, 15, 100, 90);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-340 + x, -78 - 200, -70);
+	glutSolidTorus(5, 15, 100, 90);
+	glPopMatrix();
+
+	glColor3ub(100, 100, 100);
+
+	glPushMatrix();
+	glTranslatef(-255 + x, -78 - 200, -70);
+	glutSolidTorus(5, 5, 10, 69);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(-340 + x, -78 - 200, -70);
+	glutSolidTorus(5, 5, 10, 69);
+	glPopMatrix();
+
+}
+void car(int x) {
+	glPushMatrix();
+	glTranslatef(-470 + x, -70, 90);
+	glColor3f(1, 1, 1);
+	glBegin(GL_POLYGON);
+	glVertex3f(100, 50 - 200, 0);
+	glVertex3f(100, 0 - 200, 0);
+	glVertex3f(250, 0 - 200, 0);
+	glVertex3f(250, 50 - 200, 0);
+	glEnd();
+	glBegin(GL_POLYGON);
+	glVertex3f(100, 50 - 200, 0);
+	glVertex3f(110, 100 - 200, 0);
+	glVertex3f(200, 100 - 200, 0);
+	glVertex3f(250, 50 - 200, 0);
+	glEnd();
+	glColor3f(0, 0, 0);
+	glBegin(GL_LINES);
+	glVertex3f(100, 50 - 200, 10);
+	glVertex3f(250, 50 - 200, 10);
+	glVertex3f(150, 100 - 200, 10);
+	glVertex3f(150, 0 - 200, 10);
+	glEnd();
+	textc();
+	glPopMatrix();
+
+
+	glutPostRedisplay();
+}
+int yc = -100;
+void move_car() {
+
+	yc += 1;
+	if(yc<100){
+	glPushMatrix();
+	glTranslatef(yc, 0, 0);
+	car(X);
+	manhead(X);
+	wheel(X);
+	glPopMatrix();
+	}
+	if (yc == 99) {
+		flagb == 1;
+	}
+	glutPostRedisplay();
+}
+void road() {
+	glColor3f(0, 1, 0);
+	glBegin(GL_POLYGON);//green ground
+	glVertex3f(-500, -500, -250);
+	glVertex3f(-500, 0, -250);
+	glVertex3f(500, 0, -250);
+	glVertex3f(500, -500, -250);
+	glEnd();
+	glColor3f(0, 0, 1);//blue sky
+	glBegin(GL_POLYGON);
+	glVertex3f(-500, 0, -400);
+	glVertex3f(-500, 500, -400);
+	glVertex3f(500, 500, -400);
+	glVertex3f(500, 0, -400);
+	glEnd();
+	glColor3f(0, 0, 0);
+	glBegin(GL_POLYGON);//black road
+	glVertex3f(-500, -100, -200);
+	glVertex3f(-500, -300, -200);
+	glVertex3f(500, -300, -200);
+	glVertex3f(500, -100, -200);
+	glEnd();
+
+}
+void mountain() {//mountains on the window 1
+	if (flagattack == 0) {
+		glColor3f(.6, 0, .8);
+		glBegin(GL_POLYGON);//mountain1
+		glVertex3f(-499, 0, -200);
+		glVertex3f(-400, 300, -200);
+		glVertex3f(-300, 0, -200);
+		glEnd();
+		glBegin(GL_POLYGON);//mountain2
+		glVertex3f(-301, 0, -200);
+		glVertex3f(0, 400, -200);
+		glVertex3f(200, 0, -200);
+		glEnd();
+		glBegin(GL_POLYGON);//mountain3
+		glVertex3f(150, 0, -200);
+		glVertex3f(250, 300, -200);
+		glVertex3f(499, 0, -200);
+		glEnd();
+	}
+}
+void intro() {//introduction page colors
+	glColor3f(.26, .77, 0.44);
+	glBegin(GL_POLYGON);
+	glVertex3f(-500, 0, -1);
+	glVertex3f(-500, 500, -1);
+	glVertex3f(500, 500, -1);
+	glVertex3f(500, 0, -1);
+	glEnd();
+	glColor3f(.77, 0.61, 0.49);
+	glBegin(GL_POLYGON);
+	glVertex3f(-500, -500, -1);
+	glVertex3f(-500, 0, -1);
+	glVertex3f(500, 0, -1);
+	glVertex3f(500, -500, -1);
+	glEnd();
+
+}
+void texti() {//text in the introduction page
+	char string[] = "COMPUTER GRAPHICS MINI PROJECT";
+	void *font = GLUT_BITMAP_TIMES_ROMAN_24;
+	int k;
+	glColor3f(1.0, 0.0, 0.0);
+	glRasterPos3f(-200, 450, 0);
+	for (k = 0; k < strlen(string); k++)
+		glutBitmapCharacter(font, string[k]);
+	char string1[] = "PULWAMA      ATTACK";
+	glColor3f(0.0, 0.0, 0.0);
+	glRasterPos3f(-150, 400, 0);
+	for (k = 0; k < strlen(string1); k++)
+		glutBitmapCharacter(font, string1[k]);
+
+	char string2[] = "By,";
+	glColor3f(0.0, 0.0, 0.0);
+	glRasterPos3f(280, 10, 0);
+	for (k = 0; k < strlen(string2); k++)
+		glutBitmapCharacter(font, string2[k]);
+
+	char string3[] = "SANTOSH BHIRDI";
+	glColor3f(0.0, 0.0, 0.0);
+	glRasterPos3f(270, -40, 0);
+	for (k = 0; k < strlen(string3); k++)
+		glutBitmapCharacter(font, string3[k]);
+	char string4[] = "VINAY A";
+	glColor3f(0.0, 0.0, 0.0);
+	glRasterPos3f(270, -100, 0);
+	for (k = 0; k < strlen(string4); k++)
+		glutBitmapCharacter(font, string4[k]);
+	char string5[] = "Under the guidance of";
+	glColor3f(0.0, 0.0, 0.0);
+	glRasterPos3f(-460, 10, 0);
+	for (k = 0; k < strlen(string5); k++)
+		glutBitmapCharacter(font, string5[k]);
+	char string6[] = "Prof.SHILPA B L";
+	glColor3f(0.0, 0.0, 0.0);
+	glRasterPos3f(-460, -50, 0);
+	for (k = 0; k < strlen(string6); k++)
+		glutBitmapCharacter(font, string6[k]);
+}
+void update() {//text in the last but not least page
+	char strin[] = "PULWAMA ATTACK 2019";
+	void *font = GLUT_BITMAP_TIMES_ROMAN_24;
+	int k;
+	glColor3f(1.0, 1.0, 1.0);
+	glRasterPos3f(-100, 450, 0);
+	for (k = 0; k < strlen(strin); k++)
+		glutBitmapCharacter(font, strin[k]);
+	char strin2[] = "INDIA SALUTES ITS BRAVEHEARTS									     WHO LAID DOWN THEIR LIVES";
+	glColor3f(1.5, 1.1, 0.0);
+	glRasterPos3f(-420, 0, 0);
+	for (k = 0; k < strlen(strin2); k++)
+		glutBitmapCharacter(font, strin2[k]);
+	char strin1[] = "Our flag does not fly because the wind moves it....";
+	void *font1 = GLUT_BITMAP_HELVETICA_18;
+
+	glColor3f(1.0, 0.0, 0.0);
+	glRasterPos3f(-400, 250, 0);
+	for (k = 0; k < strlen(strin1); k++)
+		glutBitmapCharacter(font1, strin1[k]);
+	char strin3[] = "It files with the last breath of each solider who died protecting it.";
+
+
+	glColor3f(1.0, 0.0, 0.0);
+	glRasterPos3f(-400, 210, 0);
+	for (k = 0; k < strlen(strin3); k++)
+		glutBitmapCharacter(font1, strin3[k]);
+	glutPostRedisplay();
+
+}
+void text1win() {//text in the first window
+	if (flagattack == 0) {
+		char strin[] = "PULWAMA ATTACK 2019";
+		void *font = GLUT_BITMAP_TIMES_ROMAN_24;
+		int k;
+		glColor3f(1.0, 1.0, 1.0);
+		glRasterPos3f(-100, 450, 0);
+		for (k = 0; k < strlen(strin); k++)
+			glutBitmapCharacter(font, strin[k]);
+		void *font1 = GLUT_BITMAP_HELVETICA_18;
+		char strin2[] = "On 14 february 2019,a convoy of vehicles carrying security personnel,";
+		glColor3f(1.5, 1.1, 0.0);
+		glRasterPos3f(-420, 300, 0);
+		for (k = 0; k < strlen(strin2); k++)
+			glutBitmapCharacter(font1, strin2[k]);
+		char strin3[] = "on the Jammu Srinagar National Highway....";
+		glColor3f(1.5, 1.1, 0.0);
+		glRasterPos3f(-420, 280, 0);
+		for (k = 0; k < strlen(strin3); k++)
+			glutBitmapCharacter(font1, strin3[k]);
+		void *font2 = GLUT_BITMAP_HELVETICA_10;
+		char strin4[] = "press right key to move bus and down key to move soldier ";
+		glColor3f(1.5, 1.1, 0.0);
+		glRasterPos3f(-420, -410, 0);
+		for (k = 0; k < strlen(strin4); k++)
+			glutBitmapCharacter(font2, strin4[k]);
+	}
+
+}
+void text2win() {//text in the second window
+	if (flagb == 0) {
+		char strin[] = "PULWAMA ATTACK 2019";
+		void *font = GLUT_BITMAP_TIMES_ROMAN_24;
+		int k;
+		glColor3f(1.0, 1.0, 1.0);
+		glRasterPos3f(-100, 450, 0);
+		for (k = 0; k < strlen(strin); k++)
+			glutBitmapCharacter(font, strin[k]);
+		void *font1 = GLUT_BITMAP_HELVETICA_18;
+		char strin2[] = "Attacked by avehicle-borne suicide bomber at Lethpora in the Pulwama dist,Jammu and Kashmir,India,";
+		glColor3f(1.5, 1.1, 0.0);
+		glRasterPos3f(-420, 300, 0);
+		for (k = 0; k < strlen(strin2); k++)
+			glutBitmapCharacter(font1, strin2[k]);
+		char strin3[] = "The attack resulted in the deaths of 44 Central Reserve Police Force personnel and attacker.";
+		glColor3f(1.5, 1.1, 0.0);
+		glRasterPos3f(-420, 280, 0);
+		for (k = 0; k < strlen(strin3); k++)
+			glutBitmapCharacter(font1, strin3[k]);
+		void *font2 = GLUT_BITMAP_HELVETICA_10;
+		char strin4[] = "press right key to move bus ";
+		glColor3f(1.5, 1.1, 0.0);
+		glRasterPos3f(-420, -410, 0);
+		for (k = 0; k < strlen(strin4); k++)
+			glutBitmapCharacter(font2, strin4[k]);
+	}
+
+}
+void last() {
+	glClearColor(0, 0, 0, 0);
+	char strin[] = "THANK YOU";
+	void *font = GLUT_BITMAP_TIMES_ROMAN_24;
+	int k;
+	glColor3f(1.0, 1.0, 1.0);
+	glRasterPos3f(10, 499, 0);
+	for (k = 0; k < strlen(strin); k++)
+		glutBitmapCharacter(font, strin[k]);
+}
+int v = 899;
+void flower() {//the falling dots
+
+	glColor3f(1, 1, 1);
+	glPointSize(5.0);
+	if (v < -10) {
+		last();
+	}
+
+	for (k = -499; k < 499; k += 30) {
+		for (int i = -499; i < 499; i += 30) {
+			glBegin(GL_POINTS);
+			glVertex2f(k, i);
+			glEnd();
+		}
+	}
+
+	glutPostRedisplay();
+}
+
+void Flaghost() {//flag hosting
+	glClearColor(0, 0.5, 0.5, 0.5);
+	glColor3f(0.2, 0.2, 0.2);
+	glBegin(GL_POLYGON);//flagbase
+	glVertex3f(-100, -499, 0);
+	glVertex3f(-100, -399, 0);
+	glVertex3f(100, -399, 0);
+	glVertex3f(100, -499, 0);
+	glEnd();
+	glBegin(GL_POLYGON);//flagbase
+	glVertex3f(-70, -399, 0);
+	glVertex3f(-70, -299, 0);
+	glVertex3f(70, -299, 0);
+	glVertex3f(70, -399, 0);
+	glEnd();
+	glBegin(GL_POLYGON);//flagpole
+	glVertex3f(-5, -299, 0);
+	glVertex3f(-5, 100, 0);
+	glVertex3f(5, 100, 0);
+	glVertex3f(5, -299, 0);
+	glEnd();
+	glColor3f(1, 0, 0);
+	glBegin(GL_POLYGON);
+	glVertex3f(5, 100, 0);
+	glVertex3f(120, 100, 0);
+	glVertex3f(120, 80, 0);
+	glVertex3f(5, 80, 0);
+	glEnd();
+	glColor3f(1, 1, 1);
+	glBegin(GL_POLYGON);
+	glVertex3f(5, 80, 0);
+	glVertex3f(120, 80, 0);
+	glVertex3f(120, 60, 0);
+	glVertex3f(5, 60, 0);
+	glEnd();
+	glPushMatrix();
+	glColor3f(0, 0, 1);
+	glTranslatef(57, 70, 0);
+	glutSolidSphere(10, 24, 24);
+	glPopMatrix();
+	glColor3f(0, 1, 0);
+	glBegin(GL_POLYGON);
+	glVertex3f(5, 60, 0);
+	glVertex3f(120, 60, 0);
+	glVertex3f(120, 40, 0);
+	glVertex3f(5, 40, 0);
+	glEnd();
+	glPushMatrix();
+	glTranslatef(0, v, 0);
+	flower();
+	glPopMatrix();
+
+}
+
+void display() {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+	if (then == 0) {
+		intro();
+		texti();
+	}
+	if (then == 1 && flagb == 0) {
+		glPushMatrix();
+		glTranslatef(0.0, 0.0, 0.0);
+		glRotatef(xangle, 1.0, 0.0, 0.0);
+		glRotatef(yangle, 0.0, 1.0, 0.0);
+		glRotatef(zangle, 0.0, 0.0, 1.0);
+		road();
+		move_bus();
+
+		tree1();
+		move_sold();
+		mountain();
+		text1win();
+		tree2();
+		tree3();
+		shrubd();
+		glPopMatrix();
+	}
+	if (flagattack == 1 && flagb == 0) {
+		glPushMatrix();
+		glTranslatef(0.0, 0.0, 0.0);
+		glRotatef(xangle, 1.0, 0.0, 0.0);
+		glRotatef(yangle, 0.0, 1.0, 0.0);
+		glRotatef(zangle, 0.0, 0.0, 1.0);
+		road();
+
+		move_bus();
+		move_car();
+		if (yc == 100) {
+			flagb = 1;
+		}
+		text2win();
+		tree1();
+		tree2();
+		GLfloat ambientColor[] = { 0.2f, 0.2f, 0.2f, 1.0f }; //Color (0.2, 0.2, 0.2)
+		glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientColor);
+
+		//Add positioned light
+		GLfloat lightColor0[] = { 0.5f, 0.8f, 0.5f, 1.0f }; //Color (0.5, 0.5, 0.5)
+		GLfloat lightPos0[] = { -4.0f, 0.0f, 8.0f, 1.0f }; //Positioned at (4, 0, 8)
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor0);
+		glLightfv(GL_LIGHT0, GL_POSITION, lightPos0);
+
+		//Add directed light
+		GLfloat lightColor1[] = { 0.5f, 0.2f, 0.2f, 1.0f }; //Color (0.5, 0.2, 0.2)
+		//Coming from the direction (-1, 0.5, 0.5)
+		GLfloat lightPos1[] = { -1.0f, 0.5f, 0.5f, 0.0f };
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, lightColor1);
+		glLightfv(GL_LIGHT1, GL_POSITION, lightPos1);
+
+
+		glPushMatrix();
+		drawBall();
+		glPopMatrix();
+		//shrubd();
+		glPopMatrix();
+	}
+	if (flagb == 1) {
+		glClearColor(1, 1, 1, 1);
+		glDisable(GL_COLOR_MATERIAL);
+
+		glDisable(GL_LIGHTING); //Enable lighting
+		glDisable(GL_LIGHT0); //Enable light #0
+		glDisable(GL_LIGHT1); //Enable light #1
+		glDisable(GL_NORMALIZE); //Automatically normalize normals
+		if (v > -10) {
+			void *font2 = GLUT_BITMAP_HELVETICA_10;
+			char strin4[] = "press e to host and then i ";
+			glColor3f(0.0, 0.0, 0.0);
+			glRasterPos3f(-420, -410, 0);
+			for (k = 0; k < strlen(strin4); k++)
+				glutBitmapCharacter(font2, strin4[k]);
+			update();
+		}
+	}
+	if (Indianflag == 1 && flagb == 1) {
+
+		Flaghost();
+
+	}
+	glFlush();
+	glutSwapBuffers();
+}
+void mouse(int btn, int state, int x, int y)
+{
+	if (btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	{
+		then = 1;
+		glutPostRedisplay();
+
+	}
+
+}
+void myinit(int w, int h) {
+	glViewport(0, 0, w, h);
+	glClearColor(0, 0, 0, 0);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-500, 500, -500, 500, -500, 500);
+	glMatrixMode(GL_MODELVIEW);
+
+}
+static void SpecialKeyFunc(int Key, int x, int y)
+{
+	switch (Key)
+	{
+	case GLUT_KEY_DOWN:		             /*move to right */
+		//bus_move();
+				//p+=50;
+		flagsold = 1;
+		
+		glutPostRedisplay();
+		break;
+	case GLUT_KEY_RIGHT:
+		//rota();   
+		flagbus = 1;
+		glutPostRedisplay();
+		break;
+	}
+}
+void key(unsigned char k, int x, int y) {
+	
+	if (k == 'e')
+	{
+		Indianflag = 1;
+		glutPostRedisplay();
+	}
+	if (k == 'i')
+	{
+
+		v -= 3;
+		glutPostRedisplay();
+	}
+	if (k == 'c')
+	{
+		if (x > 200) {
+			X += 3;
+		}
+		glutPostRedisplay();
+	}
+	if (k == ESCAPE) {
+		glutDestroyWindow(window);
+		exit(0);
+	}
+
+}
+void main(int argc, char **argv) {
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGB);
+	glutInitWindowPosition(0, 0);
+	glutInitWindowSize(1000, 1000);
+	window = glutCreateWindow("pulwama");
+	glutReshapeFunc(myinit);
+	glutDisplayFunc(display);
+	glutKeyboardFunc(&key);
+	glutMouseFunc(mouse);
+	glutSpecialFunc(SpecialKeyFunc);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_COLOR_MATERIAL);
+
+	glEnable(GL_LIGHTING); //Enable lighting
+	glEnable(GL_LIGHT0); //Enable light #0
+	glEnable(GL_LIGHT1); //Enable light #1
+	glEnable(GL_NORMALIZE); //Automatically normalize normals*/
+	glutFullScreen();
+	glutMainLoop();
+}
