@@ -1,3 +1,7 @@
 # pulwama
-there are the insturctions you a to follow check the attack
-press mouse right button on the first into screen and you'll  understand by reading the text in display
+there are the insturctions you have to follow to check how  the attack happens
+press mouse right button first
+next you can control  the bus with down arrow key
+until it moves to next window hold the down button
+in next window blast will happen
+next press the e button to host  the flag and i to end
